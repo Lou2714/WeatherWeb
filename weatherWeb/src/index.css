@@ -1,1 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-WForecastCardDay: #59C1D9;
+    --color-WForescastCardBody: #AEDFF2;
+    --color-WeatherWebPage: #F2F2F2;
+    --font-display: "Old Standard TT", "serif";
+}
