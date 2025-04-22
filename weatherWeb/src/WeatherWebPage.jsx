@@ -7,6 +7,8 @@ import humidity from "./assets/icons8-humedad-24.png"
 import currentWeatherService from "./services/CurrentWeatherService";
 import forecastService from "./services/ForecastService";
 import { useState, useEffect } from "react";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const WeatherWebPage = () =>{
     const [temperature, setTemperature] = useState('');
@@ -16,6 +18,7 @@ const WeatherWebPage = () =>{
     const [date, setDate] = useState('');
     const [locationName, setLocationName] = useState({});
     const [forecast, setForecast] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
         todaysDate();
@@ -23,23 +26,29 @@ const WeatherWebPage = () =>{
     },[])
 
     const fetchCurrentWeather = async(position) =>{
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        let currentTemperature = await currentWeatherService.currentTempC(latitude, longitude);
-        setTemperature(currentTemperature);
-        let currentHumidityPercentage = await currentWeatherService.currentHumidity(latitude, longitude);
-        setHumidityPercentage(currentHumidityPercentage);
-        let currentPrecipitation = await currentWeatherService.currentPrecipitation(latitude, longitude);
-        setPrecipitation(currentPrecipitation);
-        let currentCondition = await currentWeatherService.currentCondition(latitude, longitude);
-        setCondition(currentCondition.text);
-        let currentLocationName = await currentWeatherService.currentLocation(latitude, longitude);
-        setLocationName(locationName =>({
-            ...locationName,
-            ...currentLocationName
-        }));
-        let forecastDays = await forecastService.forecastDay(latitude, longitude);
-        setForecast(forecastDays);
+        try {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            let currentTemperature = await currentWeatherService.currentTempC(latitude, longitude);
+            setTemperature(currentTemperature);
+            let currentHumidityPercentage = await currentWeatherService.currentHumidity(latitude, longitude);
+            setHumidityPercentage(currentHumidityPercentage);
+            let currentPrecipitation = await currentWeatherService.currentPrecipitation(latitude, longitude);
+            setPrecipitation(currentPrecipitation);
+            let currentCondition = await currentWeatherService.currentCondition(latitude, longitude);
+            setCondition(currentCondition.text);
+            let currentLocationName = await currentWeatherService.currentLocation(latitude, longitude);
+            setLocationName(locationName =>({
+                ...locationName,
+                ...currentLocationName
+            }));
+            let forecastDays = await forecastService.forecastDay(latitude, longitude);
+            setForecast(forecastDays);
+        } catch (error) {
+            console.error(error)
+        }finally{
+            setLoading(false);
+        }
     }
 
     const todaysDate = () => {
@@ -51,20 +60,39 @@ const WeatherWebPage = () =>{
         }).format(new Date());
         setDate(date);
     }
+
     return(
         <div className="text-center font-display bg-WeatherWebPage h-dvh">
             <h1 className="text-4xl font-bold p-16">Weather Web</h1>
             <div className="flex flex-row justify-center gap-10 9-5">
                 <img src={weatherImage} alt="Clima del día de hoy" />
                 <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-xl">
-                    <h1 className="col-span-2 text-3xl font-medium place-self-center">{temperature}°C</h1>
+                    <h1 className="col-span-2 text-3xl font-medium place-self-center">{
+                    loading ? (
+                        <Box sx={{ display: 'flex' }}>
+                        <CircularProgress />
+                        </Box>
+                    ) :
+                    `${temperature}°C`}</h1>
                     <section className="flex flex-row gap-5">
                         <img src={todaysWeather} alt="Calendario" className="place-self-center" />
-                        <p className="text-lg font-medium">{date}</p>
+                        <p className="text-lg font-medium">{
+                        loading ? (
+                            <Box sx={{ display: 'flex' }}>
+                            <CircularProgress />
+                            </Box>
+                        ) :
+                        date}</p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={location} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{locationName.name}, {locationName.country}</p>
+                        <p className="text-lg font-medium">{
+                        loading ? (
+                            <Box sx={{ display: 'flex' }}>
+                            <CircularProgress />
+                            </Box>
+                        ) :
+                        `${locationName.name},${locationName.country}`}</p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={precip} alt="Lugar" className="place-self-center" />
@@ -72,13 +100,23 @@ const WeatherWebPage = () =>{
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={humidity} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{humidityPercentage}%</p>
+                        <p className="text-lg font-medium">{
+                        loading ? (
+                            <Box sx={{ display: 'flex' }}>
+                            <CircularProgress />
+                            </Box>
+                        ) :
+                        `${humidityPercentage}°C`}</p>
                     </section>
                     
                 </div>
             </div>
             <div className="flex flex-row justify-center gap-10 m-10">
-                {forecast.map((day) => (
+                { loading ? (
+                    <Box sx={{ display: 'flex' }}>
+                        <CircularProgress />
+                    </Box>
+                ) : forecast.map((day) => (
                     <WeatherForecastCard
                         key={day.date}
                         date={day.date}
