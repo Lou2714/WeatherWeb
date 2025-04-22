@@ -1,14 +1,25 @@
-import weatherImage from "../assets/weather-forecast.png"
+import maxTemp from "../assets/alta-temperatura.png"
+import minTemp from "../assets/mas-frio.png"
 
-const WeatherForecastCard = () =>{
+const WeatherForecastCard = ({ date, conditionIcon, maxTempC, minTempC }) =>{
+
     return(
-        <div className="w-48">
+        <div className="w-2xs">
             <div className="bg-WForecastCardDay text-center rounded-t-xl p-0.5">
-                <h1 className="text-xl font-semibold">Martes</h1>
+                <h1 className="text-xl font-semibold">{date}</h1>
             </div>
                 <div className="bg-WForescastCardBody justify-items-center rounded-b-xl p-4">
-                    <img src={weatherImage} alt="Today's-Weather" />
-                    <h3 className="pt-3 text-lg font-semibold">28.8°C</h3>
+                    <img src={conditionIcon} alt="Today's-Weather" />
+                    <section className="flex flex-row gap-6">
+                        <section className="flex flex-row">
+                            <img src={maxTemp} alt="Máxima temperatura" className="place-self-center"/>
+                            <h3 className="pt-3 text-lg font-semibold">{maxTempC}°C</h3>
+                        </section>
+                        <section className="flex flex-row">
+                            <img src={minTemp} alt="Máxima temperatura" className="place-self-center"/>
+                            <h3 className="pt-3 text-lg font-semibold">{minTempC}°C</h3>
+                        </section>
+                    </section>
             </div>
         </div>
     );

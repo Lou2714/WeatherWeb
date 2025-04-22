@@ -5,6 +5,7 @@ import location from "./assets/marcador-de-posicion_24.png"
 import precip from "./assets/icons8-precipitación-24.png"
 import humidity from "./assets/icons8-humedad-24.png"
 import currentWeatherService from "./services/CurrentWeatherService";
+import forecastService from "./services/ForecastService";
 import { useState, useEffect } from "react";
 
 const WeatherWebPage = () =>{
@@ -13,22 +14,32 @@ const WeatherWebPage = () =>{
     const [precipitation, setPrecipitation] = useState('');
     const [condition, setCondition] = useState('');
     const [date, setDate] = useState('');
+    const [locationName, setLocationName] = useState({});
+    const [forecast, setForecast] = useState([]);
 
     useEffect(()=>{
-        fetchCurrentWeather();
         todaysDate();
+        navigator.geolocation.getCurrentPosition(fetchCurrentWeather);
     },[])
 
-    const fetchCurrentWeather = async() =>{
-        let currentTemperature = await currentWeatherService.currentTempC('Soyapango');
+    const fetchCurrentWeather = async(position) =>{
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        let currentTemperature = await currentWeatherService.currentTempC(latitude, longitude);
         setTemperature(currentTemperature);
-        let currentHumidityPercentage = await currentWeatherService.currentHumidity('Soyapango');
+        let currentHumidityPercentage = await currentWeatherService.currentHumidity(latitude, longitude);
         setHumidityPercentage(currentHumidityPercentage);
-        let currentPrecipitation = await currentWeatherService.currentPrecipitation('Soyapango');
+        let currentPrecipitation = await currentWeatherService.currentPrecipitation(latitude, longitude);
         setPrecipitation(currentPrecipitation);
-        let currentCondition = await currentWeatherService.currentCondition('Soyapango');
+        let currentCondition = await currentWeatherService.currentCondition(latitude, longitude);
         setCondition(currentCondition.text);
-        
+        let currentLocationName = await currentWeatherService.currentLocation(latitude, longitude);
+        setLocationName(locationName =>({
+            ...locationName,
+            ...currentLocationName
+        }));
+        let forecastDays = await forecastService.forecastDay(latitude, longitude);
+        setForecast(forecastDays);
     }
 
     const todaysDate = () => {
@@ -40,7 +51,6 @@ const WeatherWebPage = () =>{
         }).format(new Date());
         setDate(date);
     }
-
     return(
         <div className="text-center font-display bg-WeatherWebPage h-dvh">
             <h1 className="text-4xl font-bold p-16">Weather Web</h1>
@@ -54,7 +64,7 @@ const WeatherWebPage = () =>{
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={location} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">Usulutan, El Salvador</p>
+                        <p className="text-lg font-medium">{locationName.name}, {locationName.country}</p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={precip} alt="Lugar" className="place-self-center" />
@@ -68,9 +78,16 @@ const WeatherWebPage = () =>{
                 </div>
             </div>
             <div className="flex flex-row justify-center gap-10 m-10">
-                <WeatherForecastCard/>
-                <WeatherForecastCard/>
-                <WeatherForecastCard/>
+                {forecast.map((day) => (
+                    <WeatherForecastCard
+                        key={day.date}
+                        date={day.date}
+                        conditionIcon = {day.day.condition.icon}
+                        maxTempC = {day.day.maxtemp_c}
+                        minTempC = {day.day.mintemp_c}
+                    />
+                ))
+                }
             </div>
         </div>
     )
