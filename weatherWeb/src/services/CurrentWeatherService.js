@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const BASEURL = 'http://api.weatherapi.com/v1';
-const weatherKey = import.meta.env.VITE_APIKEY_WEATHER;
+//const weatherKey = import.meta.env.VITE_APIKEY_WEATHER;
+const weatherKey = '6d2ccdee0cf143c2808151817251404';
 
 const api = axios.create({
     baseURL:BASEURL,
