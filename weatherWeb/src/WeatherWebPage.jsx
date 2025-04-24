@@ -9,6 +9,8 @@ import forecastService from "./services/ForecastService";
 import { useState, useEffect } from "react";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+
 
 const WeatherWebPage = () =>{
     const [temperature, setTemperature] = useState('');
@@ -22,7 +24,7 @@ const WeatherWebPage = () =>{
 
     useEffect(()=>{
         todaysDate();
-        navigator.geolocation.getCurrentPosition(fetchCurrentWeather);
+        navigator.geolocation.getCurrentPosition(fetchCurrentWeather, navigatorDenial);
     },[])
 
     const fetchCurrentWeather = async(position) =>{
@@ -59,6 +61,11 @@ const WeatherWebPage = () =>{
             year: 'numeric'
         }).format(new Date());
         setDate(date);
+    }
+
+    const navigatorDenial = (err) =>{
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+
     }
 
     return(
@@ -106,7 +113,7 @@ const WeatherWebPage = () =>{
                             <CircularProgress />
                             </Box>
                         ) :
-                        `${humidityPercentage}°C`}</p>
+                        `${humidityPercentage}%`}</p>
                     </section>
                     
                 </div>
