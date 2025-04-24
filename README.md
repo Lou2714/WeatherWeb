@@ -1,6 +1,7 @@
 # ☀️ Weather Web
 
-[![Vercel](https://img.shields.io/badge/WEATHER_WEB-%E2%86%92_VERCEL-purple?style=for-the-badge&logo=vercel)]([weather-web-tawny.vercel.app](https://weather-web-tawny.vercel.app/))
+## 🔗 Enlace
+[Weather Web](https://weather-web-tawny.vercel.app/)
 
 ## 📌 ¿Qué hace?  
 La web muestra:
