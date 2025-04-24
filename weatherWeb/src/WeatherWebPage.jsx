@@ -7,20 +7,19 @@ import humidity from "./assets/icons8-humedad-24.png"
 import currentWeatherService from "./services/CurrentWeatherService";
 import forecastService from "./services/ForecastService";
 import { useState, useEffect } from "react";
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
+import ErrorAlert from "./components/ui/Feedback/ErrorAlert";
+import Progress from "./components/ui/Feedback/Progress";
 
 
 const WeatherWebPage = () =>{
     const [temperature, setTemperature] = useState('');
     const [humidityPercentage, setHumidityPercentage] = useState('');
     const [precipitation, setPrecipitation] = useState('');
-    const [condition, setCondition] = useState('');
     const [date, setDate] = useState('');
     const [locationName, setLocationName] = useState({});
     const [forecast, setForecast] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [navigatorPermissionError, setNavigatorPermissionError] = useState(false);
 
     useEffect(()=>{
         todaysDate();
@@ -37,8 +36,6 @@ const WeatherWebPage = () =>{
             setHumidityPercentage(currentHumidityPercentage);
             let currentPrecipitation = await currentWeatherService.currentPrecipitation(latitude, longitude);
             setPrecipitation(currentPrecipitation);
-            let currentCondition = await currentWeatherService.currentCondition(latitude, longitude);
-            setCondition(currentCondition.text);
             let currentLocationName = await currentWeatherService.currentLocation(latitude, longitude);
             setLocationName(locationName =>({
                 ...locationName,
@@ -63,12 +60,14 @@ const WeatherWebPage = () =>{
         setDate(date);
     }
 
-    const navigatorDenial = (err) =>{
-        console.warn(`ERROR(${err.code}): ${err.message}`);
-
+    const navigatorDenial = () =>{
+        setNavigatorPermissionError(true);
     }
 
     return(
+        <>
+        {navigatorPermissionError && (<ErrorAlert message={'No hay permisos de navegación'} /> )} 
+
         <div className="text-center font-display bg-WeatherWebPage h-dvh">
             <h1 className="text-4xl font-bold p-16">Weather Web</h1>
             <div className="flex flex-row justify-center gap-10 9-5">
@@ -76,42 +75,35 @@ const WeatherWebPage = () =>{
                 <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-xl">
                     <h1 className="col-span-2 text-3xl font-medium place-self-center">{
                     loading ? (
-                        <Box sx={{ display: 'flex' }}>
-                        <CircularProgress />
-                        </Box>
+                        <Progress />
                     ) :
                     `${temperature}°C`}</h1>
                     <section className="flex flex-row gap-5">
                         <img src={todaysWeather} alt="Calendario" className="place-self-center" />
-                        <p className="text-lg font-medium">{
-                        loading ? (
-                            <Box sx={{ display: 'flex' }}>
-                            <CircularProgress />
-                            </Box>
-                        ) :
-                        date}</p>
+                        <p className="text-lg font-medium">{date}</p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={location} alt="Lugar" className="place-self-center" />
                         <p className="text-lg font-medium">{
                         loading ? (
-                            <Box sx={{ display: 'flex' }}>
-                            <CircularProgress />
-                            </Box>
+                            <Progress />
                         ) :
                         `${locationName.name},${locationName.country}`}</p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={precip} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{precipitation} mm</p>
+                        <p className="text-lg font-medium">{
+                            loading ? (
+                                <Progress />
+                            ) :
+                            `${precipitation} mm`}
+                        </p>
                     </section>
                     <section className="flex flex-row gap-5">
                         <img src={humidity} alt="Lugar" className="place-self-center" />
                         <p className="text-lg font-medium">{
                         loading ? (
-                            <Box sx={{ display: 'flex' }}>
-                            <CircularProgress />
-                            </Box>
+                            <Progress />
                         ) :
                         `${humidityPercentage}%`}</p>
                     </section>
@@ -120,9 +112,7 @@ const WeatherWebPage = () =>{
             </div>
             <div className="flex flex-row justify-center gap-10 m-10">
                 { loading ? (
-                    <Box sx={{ display: 'flex' }}>
-                        <CircularProgress />
-                    </Box>
+                    <Progress />
                 ) : forecast.map((day) => (
                     <WeatherForecastCard
                         key={day.date}
@@ -135,6 +125,7 @@ const WeatherWebPage = () =>{
                 }
             </div>
         </div>
+        </>
     )
 }
 

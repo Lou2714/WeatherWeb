@@ -20,7 +20,7 @@ La web muestra:
 - La ubicación mostrada depende de cómo WeatherAPI interprete tus coordenadas
 
 ##  🛠 Tecnologías Usadas  
-- **Frontend**: React, Material UI y Tailwind CSS.  
+- **Frontend**: React, Material UI (Feedback components) y Tailwind CSS.  
 - **API**: WeatherAPI y API de geolocalización (navegador)
 - **Deployment**: Vercel.  
 
