@@ -110,7 +110,7 @@ const WeatherWebPage = () =>{
                     
                 </div>
             </div>
-            <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row sm:p-5 gap-5">
+            <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row sm:flex-wrap sm:justify-center-safe sm:p-5 gap-5">
                 { loading ? (
                     <Progress />
                 ) : forecast.map((day) => (
