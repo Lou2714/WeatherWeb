@@ -69,10 +69,10 @@ const WeatherWebPage = () =>{
         {navigatorPermissionError && (<ErrorAlert message={'No hay permisos de navegación'} /> )} 
 
         <div className="text-center font-display bg-WeatherWebPage h-dvh">
-            <h1 className="text-4xl font-bold p-16">Weather Web</h1>
-            <div className="flex flex-row justify-center gap-10 9-5">
-                <img src={weatherImage} alt="Clima del día de hoy" />
-                <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-xl">
+            <h1 className="text-4xl font-bold p-8">Weather Web</h1>
+            <div className="flex flex-col place-content-center sm:flex-row sm:justify-center ">
+                <img src={weatherImage} className="w-36 h-36 place-self-center" alt="Clima del día de hoy" />
+                <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-2xs m-2 sm:w-xl">
                     <h1 className="col-span-2 text-3xl font-medium place-self-center">{
                     loading ? (
                         <Progress />
@@ -110,7 +110,7 @@ const WeatherWebPage = () =>{
                     
                 </div>
             </div>
-            <div className="flex flex-row justify-center gap-10 m-10">
+            <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row gap-5">
                 { loading ? (
                     <Progress />
                 ) : forecast.map((day) => (
