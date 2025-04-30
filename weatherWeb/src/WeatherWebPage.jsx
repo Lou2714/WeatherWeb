@@ -67,7 +67,7 @@ const WeatherWebPage = () =>{
 
     return(
         <>
-        {navigatorPermissionError && (<ErrorAlert message={'No hay permisos de navegación'} /> )} 
+        {navigatorPermissionError && (<ErrorAlert message={'No hay permisos de navegación'} />)} 
 
         <div className="text-center font-display bg-WeatherWebPage h-dvh lg:w-full">
             <h1 className="text-4xl font-bold p-5 md:p-8 lg:p-12 xl:pb-2">Weather Web</h1>
@@ -76,7 +76,7 @@ const WeatherWebPage = () =>{
                 {
                     loading ? (
                         <Progress />
-                    ) :
+                    ) : (
                 <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-2xs m-2 md:w-3xl md:p-10">
                     <h1 className="col-span-2 text-3xl font-medium place-self-center">{`${temperature}°C`}</h1>
                     <DetailItem 
@@ -96,7 +96,7 @@ const WeatherWebPage = () =>{
                         text={`${humidityPercentage}%`}
                     />
                 </div> 
-                }
+                )}
             </div>
             <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row sm:flex-wrap sm:justify-center-safe sm:p-5 md:p-10 gap-5 lg:p-0">
                 { loading ? (
