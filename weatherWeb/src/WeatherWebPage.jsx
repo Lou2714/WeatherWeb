@@ -9,6 +9,7 @@ import forecastService from "./services/ForecastService";
 import { useState, useEffect } from "react";
 import ErrorAlert from "./components/ui/Feedback/ErrorAlert";
 import Progress from "./components/ui/Feedback/Progress";
+import DetailItem from "./components/DetailItem";
 
 
 const WeatherWebPage = () =>{
@@ -68,49 +69,36 @@ const WeatherWebPage = () =>{
         <>
         {navigatorPermissionError && (<ErrorAlert message={'No hay permisos de navegación'} /> )} 
 
-        <div className="text-center font-display bg-WeatherWebPage h-dvh">
-            <h1 className="text-4xl font-bold p-5">Weather Web</h1>
-            <div className="flex flex-col place-self-center sm:flex-row sm:justify-center ">
+        <div className="text-center font-display bg-WeatherWebPage h-dvh lg:w-full">
+            <h1 className="text-4xl font-bold p-5 md:p-8 lg:p-12 xl:pb-2">Weather Web</h1>
+            <div className="flex flex-col place-self-center sm:flex-row sm:justify-center">
                 <img src={weatherImage} className="w-36 h-36 sm:w-auto sm:h-auto place-self-center" alt="Clima del día de hoy" />
-                <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-2xs m-2 sm:w-xl">
-                    <h1 className="col-span-2 text-3xl font-medium place-self-center">{
+                {
                     loading ? (
                         <Progress />
                     ) :
-                    `${temperature}°C`}</h1>
-                    <section className="flex flex-row gap-5">
-                        <img src={todaysWeather} alt="Calendario" className="place-self-center" />
-                        <p className="text-lg font-medium">{date}</p>
-                    </section>
-                    <section className="flex flex-row gap-5">
-                        <img src={location} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{
-                        loading ? (
-                            <Progress />
-                        ) :
-                        `${locationName.name},${locationName.country}`}</p>
-                    </section>
-                    <section className="flex flex-row gap-5">
-                        <img src={precip} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{
-                            loading ? (
-                                <Progress />
-                            ) :
-                            `${precipitation} mm`}
-                        </p>
-                    </section>
-                    <section className="flex flex-row gap-5">
-                        <img src={humidity} alt="Lugar" className="place-self-center" />
-                        <p className="text-lg font-medium">{
-                        loading ? (
-                            <Progress />
-                        ) :
-                        `${humidityPercentage}%`}</p>
-                    </section>
-                    
-                </div>
+                <div className="grid grid-rows-3 grid-cols-2 gap-2 place-items-start items-center w-2xs m-2 md:w-3xl md:p-10">
+                    <h1 className="col-span-2 text-3xl font-medium place-self-center">{`${temperature}°C`}</h1>
+                    <DetailItem 
+                        image={todaysWeather}
+                        text={date}
+                    />
+                    <DetailItem 
+                        image={location}
+                        text={`${locationName.name}, ${locationName.country}`}
+                    />
+                    <DetailItem 
+                        image={precip}
+                        text={`${precipitation} mm`}
+                    />
+                    <DetailItem 
+                        image={humidity}
+                        text={`${humidityPercentage}%`}
+                    />
+                </div> 
+                }
             </div>
-            <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row sm:flex-wrap sm:justify-center-safe sm:p-5 gap-5">
+            <div className="flex flex-col p-2 w-full place-items-center bg-WeatherWebPage sm:flex-row sm:flex-wrap sm:justify-center-safe sm:p-5 md:p-10 gap-5 lg:p-0">
                 { loading ? (
                     <Progress />
                 ) : forecast.map((day) => (

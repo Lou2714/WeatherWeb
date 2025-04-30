@@ -5,7 +5,7 @@ const ErrorAlert = ({ message }) =>{
     return(
         <div className='relative w-dvw'>
             <Alert icon={<ReportProblemIcon fontSize="medium"/>} severity="warning">
-                <p className='text-lg'>{message}</p>
+                <p className='text-lg lg:text-2xl'>{message}</p>
             </Alert>
         </div>
     )
